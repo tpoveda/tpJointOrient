@@ -7,5 +7,11 @@ Features
 =========================================================
 * TEST
 
-How to use
+Installation
 =========================================================
+Copy tpJointOrient.py file into your Documents/Maya/(Version)/scripts folder and execute this code in Maya command panel
+
+``` python
+import tpJointOrient
+reload(tpJointOrient)
+```
