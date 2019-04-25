@@ -37,7 +37,7 @@ class tpJointOrient(object):
         """
 
         global logger
-        logger = logger_utils.Logger(name=tpJointOrient.__name__, level=logger_utils.LoggerLevel.DEBUG)
+        logger = logger_utils.Logger(name=tpJointOrient.__name__, level=logger_utils.LoggerLevel.WARNING).logger
         logger.debug('Initializing tpJointOrient Logger ...')
         return logger
 

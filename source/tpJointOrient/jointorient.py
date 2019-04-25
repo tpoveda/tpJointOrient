@@ -14,7 +14,7 @@ class JointOrient(window.MainWindow, object):
     def __init__(self):
         super(JointOrient, self).__init__(
             name='JointOrientWindow',
-            title='RigLib - Joint Orient',
+            title='Joint Orient',
             size=(350, 700),
             fixed_size=False,
             auto_run=True,
