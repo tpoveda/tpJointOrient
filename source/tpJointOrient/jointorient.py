@@ -1,7 +1,7 @@
 from functools import partial
 
-from tpQtLib.Qt.QtCore import *
-from tpQtLib.Qt.QtWidgets import *
+from Qt.QtCore import *
+from Qt.QtWidgets import *
 
 import tpDccLib as tp
 import tpMayaLib as maya

@@ -8,9 +8,9 @@ Initialization module for tpJointOrient
 from __future__ import print_function, division, absolute_import
 
 import os
-import sys
+import inspect
 
-from tpPyUtils import logger as logger_utils
+from tpPyUtils import importer
 
 # =================================================================================
 
@@ -19,46 +19,50 @@ logger = None
 # =================================================================================
 
 
-class tpJointOrient(object):
-    def __init__(self):
-        super(tpJointOrient, self).__init__()
+class tpJointOrient(importer.Importer, object):
+    def __init__(self, *args, **kwargs):
+        super(tpJointOrient, self).__init__(module_name='tpJointOrient', *args, **kwargs)
 
-    @classmethod
-    def initialize(cls, do_reload=False):
-        cls.create_logger()
-
-        if do_reload:
-            cls.reload_all()
-
-    @staticmethod
-    def create_logger():
+    def get_module_path(self):
         """
-        Creates and initializes tpJointOrient logger
+        Returns path where tpJointOrient module is stored
+        :return: str
         """
 
-        global logger
-        logger = logger_utils.Logger(name=tpJointOrient.__name__, level=logger_utils.LoggerLevel.WARNING).logger
-        logger.debug('Initializing tpJointOrient Logger ...')
-        return logger
-
-    @staticmethod
-    def reload_all():
-        # if os.environ.get('SOLSTICE_DEV_MODE', '0') == '1':
-        import inspect
-        scripts_dir = os.path.dirname(__file__)
-        for key, module in sys.modules.items():
+        try:
+            mod_dir = os.path.dirname(inspect.getframeinfo(inspect.currentframe()).filename)
+        except Exception:
             try:
-                module_path = inspect.getfile(module)
-            except TypeError:
-                continue
-            if module_path == __file__:
-                continue
-            if module_path.startswith(scripts_dir):
-                reload(module)
+                mod_dir = os.path.dirname(__file__)
+            except Exception:
+                try:
+                    import tpDccLib
+                    mod_dir = tpDccLib.__path__[0]
+                except Exception:
+                    return None
+
+        return mod_dir
+
+
+def init(do_reload=False):
+    """
+    Initializes module
+    :param do_reload: bool, Whether to reload modules or not
+    """
+
+    tpjointorient_importer = importer.init_importer(importer_class=tpJointOrient, do_reload=do_reload)
+
+    global logger
+    logger = tpjointorient_importer.logger
+
+    tpjointorient_importer.import_modules()
+    tpjointorient_importer.import_packages(only_packages=True)
+    if do_reload:
+        tpjointorient_importer.reload_all()
 
 
 def run(do_reload=False):
-    tpJointOrient.initialize(do_reload=do_reload)
+    init(do_reload=do_reload)
     from tpJointOrient import jointorient
     win = jointorient.run()
     return win
